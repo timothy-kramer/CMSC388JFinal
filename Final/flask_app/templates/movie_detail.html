@@ -1,4 +1,5 @@
-{% extends "header.html" %} {% block content %}
+{% extends "header.html" %}
+{% block content %}
 
 {% if error_msg %}
   <b class="text-red-400">
@@ -7,12 +8,10 @@
 {% endif %}
 
 {% if movie %}
-
-{# Display card for the movie details #}
 <div class="movie-container">
   <ul class="movie-info">
-    <div class="movie-title"> {{ movie.title }}
-      <p class="movie-date"> &middot; {{ movie.year }}</p>
+    <div class="movie-title">{{ movie.title }}
+      <p class="movie-date"> · {{ movie.year }}</p>
     </div>
     <img class="movie-img" alt="alt text" src="{{ movie.poster_url }}" />
     <li class="opacity-40 md:px-4"><b>Directed by:</b> {{ movie.director }}</li>
@@ -21,21 +20,49 @@
     <li class="opacity-40 md:px-4"><b>Awards:</b> {{ movie.awards }}</li>
   </ul>
 
+  <!-- Watchlist Section -->
+  {% if current_user.is_authenticated %}
+    <div class="watchlist-section mt-6">
+      <h1 class="reviews-title">Add to Watchlist</h1>
+      {% if movie_in_watchlist %}
+        <div class="bg-green-100 text-green-800 p-4 rounded-lg text-center">
+          Already in Watchlist
+        </div>
+      {% else %}
+        <form method="POST" action="" class="review-form">
+          {{ watchlist_form.csrf_token }}
+          <div class="form-group review-input">
+            {{ watchlist_form.priority.label }}
+            {{ watchlist_form.priority(class="form-content", placeholder="Enter priority (1-10)") }}
+            {% if watchlist_form.priority.errors %}
+              <div class="error" role="alert">
+                {% for error in watchlist_form.priority.errors %}
+                  <span>{{ error }}</span>
+                {% endfor %}
+              </div>
+            {% endif %}
+          </div>
+          {{ watchlist_form.submit(class="review-button") }}
+        </form>
+      {% endif %}
+    </div>
+  {% endif %}
+
   {# Reviews #}
   <div class="reviews">
-    <h1 class="reviews-title"> Reviews
-      <small class="reviews-count"> {{ reviews | length }} reviews </small>
+    <h1 class="reviews-title">Reviews
+      <small class="reviews-count">{{ reviews | length }} reviews</small>
     </h1>
     <ul class="review-container">
-      {% for review in reviews %}
+      {% for item in reviews %}
         <li class="review flex gap-2">
-          <img class="h-20 w-20 rounded-lg" src="data:image/png;base64,{{review.image}}" alt="" />
+          <img class="h-20 w-20 rounded-lg" src="data:image/png;base64,{{ item.image_data }}" alt="" />
           <div class="w-full">
-            <span class="review-date">{{ review.date }}</span>
-            <a class="review-commenter" href="{{ url_for('movies.user_detail', username=review.commenter.username) }}">
-              @{{ review.commenter.username }}
+            <span class="review-date">{{ item.review.date }}</span>
+            <a class="review-commenter" href="{{ url_for('users.user_detail', username=item.review.commenter.username) }}">
+              @{{ item.review.commenter.username }}
             </a>
-            <p class="review-content">{{ review.content }}</p>
+            <p class="review-content">{{ item.review.content }}</p>
           </div>
         </li>
       {% endfor %}
@@ -47,11 +74,12 @@
         <form method="POST" action="" class="review-form">
           {{ form.csrf_token }}
           <div class="form-group review-input">
-            {{ form.text.label }} {{ form.text(class="form-content") }}
+            {{ form.text.label }}
+            {{ form.text(class="form-content") }}
             {% if form.text.errors %}
               <div class="error" role="alert">
                 {% for error in form.text.errors %}
-                <span>{{ error }}</span>
+                  <span>{{ error }}</span>
                 {% endfor %}
               </div>
             {% endif %}
@@ -63,4 +91,5 @@
   </div>
   <div class="w-0 lg:w-96"></div>
 </div>
-{% endif %} {% endblock content %}
+{% endif %}
+{% endblock content %}

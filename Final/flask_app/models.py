@@ -1,7 +1,7 @@
 from flask_login import UserMixin
 from datetime import datetime
-from . import db, login_manager
-from mongoengine import StringField, ImageField, ReferenceField
+from . import db, login_manager, utils
+from mongoengine import StringField, ImageField, ReferenceField, IntField
 #from wtforms.validators import (
 #    InputRequired,
 #    Length,
@@ -38,3 +38,11 @@ class Review(db.Document):
     movie_title = StringField(required=True, min_length=1, max_length=100)
     image = db.ImageField()
     #Uncomment when other fields are ready for review pictures
+
+#watchlist class
+class Watchlist(db.Document):
+    user = ReferenceField(User, required=True)
+    imdb_id = StringField(required=True, min_length=9, max_length=9)
+    movie_title = StringField(required=True, min_length=1, max_length=100)
+    priority = IntField(required=True, min_value=1, max_value=10)  # Priority from 1 to 10
+    date_added = StringField(required=True, default=utils.current_time())

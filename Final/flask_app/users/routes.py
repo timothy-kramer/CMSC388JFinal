@@ -121,3 +121,4 @@ def user_detail(username):
         image_data = base64.b64encode(image_binary).decode("utf-8")
 
     return render_template("user_detail.html", user=user, reviews=reviews, image=image_data)
+

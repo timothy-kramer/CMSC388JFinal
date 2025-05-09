@@ -3,13 +3,14 @@ from flask_login import current_user
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileRequired, FileAllowed
 from werkzeug.utils import secure_filename
-from wtforms import StringField, SubmitField, TextAreaField, PasswordField
+from wtforms import StringField, SubmitField, TextAreaField, PasswordField, IntegerField, IntegerRangeField
 from wtforms.validators import (
     InputRequired,
     Length,
     Email,
     EqualTo,
     ValidationError,
+    NumberRange
 )
 
 
@@ -79,3 +80,7 @@ class UpdateProfilePicForm(FlaskForm):
     # not sure about last comma
     picture = FileField( "Profile Picture",validators=[FileRequired(),FileAllowed(["jpg", "png"], "Only JPG and PNG images are allowed!"),],)
     submit_picture = SubmitField("Update Profile Picture")
+
+class WatchlistForm(FlaskForm):
+    priority = IntegerField("Priority (1-10)", validators=[InputRequired(), NumberRange(min=1, max=10)])
+    submit = SubmitField("Add to Watchlist")
