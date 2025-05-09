@@ -22,6 +22,7 @@ class User(db.Document, UserMixin):
     email = StringField(required=True, unique=True)
     password = StringField(required=True) 
     profile_pic = db.ImageField()
+    theme = StringField(default="light", choices=["light", "dark"])
 
     # Returns unique string identifying our object
     def get_id(self):

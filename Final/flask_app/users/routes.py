@@ -5,7 +5,7 @@ from io import BytesIO
 from .. import bcrypt
 from werkzeug.utils import secure_filename
 from ..forms import RegistrationForm, LoginForm, UpdateUsernameForm, UpdateProfilePicForm
-from ..models import User, Review
+from ..models import User, Review, Watchlist
 
 
 users = Blueprint("users", __name__)
@@ -64,6 +64,7 @@ def logout():
     flash("You have been logged out.")
     return redirect(url_for("movies.index"))
 
+
 @users.route("/account", methods=["GET", "POST"])
 @login_required
 def account():
@@ -73,7 +74,6 @@ def account():
     if request.method == "POST":
         if update_username_form.submit_username.data and update_username_form.validate():
             current_user.modify(username=update_username_form.username.data)
-            current_user.save()
             login_user(current_user)
             flash("Username updated successfully!", "success")
             return redirect(url_for("users.account"))  
@@ -88,6 +88,7 @@ def account():
 
                 flash("Profile picture updated successfully!", "success")
                 return redirect(url_for("users.account"))
+    
 
 
     image_data = None
@@ -100,8 +101,9 @@ def account():
         "account.html",
         update_username_form=update_username_form,
         update_profile_pic_form=update_profile_pic_form,
-        image=image_data,
+        image=image_data
     )
+
     # TODO: handle get requests  
 
 
@@ -119,6 +121,7 @@ def user_detail(username):
     if user.profile_pic:
         image_binary = user.profile_pic.read() 
         image_data = base64.b64encode(image_binary).decode("utf-8")
+    watchlist = Watchlist.objects(user=user).order_by("-priority")
 
-    return render_template("user_detail.html", user=user, reviews=reviews, image=image_data)
+    return render_template('user_detail.html', user=user, image=image_data, reviews=reviews, watchlist=watchlist)
 

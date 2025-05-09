@@ -9,17 +9,15 @@
     {% if image %}
         <img class="rounded-2xl" src="data:image/png;base64,{{image}}" alt="image">
     {% endif %}
-    {# TODO: Indicate which user's reviews we're looking at #}
+    {# Indicate which user's reviews we're looking at #}
     <h2 class="text-xl text-neutral-500 mt-2">
         <b class="text-white">{{ user.username }}'s Reviews</b>
     </h2>
     <h3 class="text-xl text-neutral-500 mt-2">Number of Reviews: 
         <b class="text-white">{{ reviews|length }}</b>
     </h3>
-
 </div>
 <div class="container mx-auto w-full md:w-2/3 lg:w-1/3">
-    
     <table class="mt-4 w-full border-collapse border border-gray-500">
         <thead>
             <tr class="bg-gray-700 text-white">
@@ -41,6 +39,27 @@
 
     {% if not reviews %}
         <p class="text-neutral-400 mt-4">No Reviews found for {{ user.username }}</p>
+    {% endif %}
+</div>
+<div class="container mx-auto w-full md:w-2/3 lg:w-1/3 mt-6">
+    <h2 class="text-xl text-neutral-500 mt-2">
+        <b class="text-white">{{ user.username }}'s Watchlist</b>
+    </h2>
+    <h3 class="text-xl text-neutral-500 mt-2">Number of Movies: 
+        <b class="text-white">{{ watchlist|length }}</b>
+    </h3>
+    {% if watchlist %}
+        <ul class="mt-4">
+            {% for item in watchlist %}
+                <li class="mb-2">
+                    <a href="{{ url_for('movies.movie_detail', movie_id=item.imdb_id) }}" class="text-blue-500 hover:underline">
+                        {{ item.movie_title }} (Priority: {{ item.priority }})
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="text-neutral-400 mt-4">No movies in watchlist.</p>
     {% endif %}
 </div>
 {% endblock %}
