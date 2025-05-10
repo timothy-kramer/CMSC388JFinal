@@ -16,24 +16,32 @@
     {{ form.submit(class="form-button") }}
   </form>
   {% if current_user.is_authenticated %}
-    <div class="watchlist-preview mt-8 flex flex-col items-center">
-      <h3 class="text-2xl font-bold">Your Watchlist</h3>
-      {% if watchlist_movies %}
-        <ul class="mt-4 w-full max-w-md">
-          {% for movie in watchlist_movies %}
-            <li class="mb-2 text-center">
-              <a href="{{ url_for('movies.movie_detail', movie_id=movie.imdb_id) }}" class="text-blue-500 hover:underline">
-                {{ movie.movie_title }} (Priority: {{ movie.priority }})
-              </a>
-            </li>
-          {% endfor %}
-        </ul>
-        <a href="{{ url_for('movies.watchlist') }}" class="mt-4 inline-block bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">View Full Watchlist</a>
-      {% else %}
-        <p class="mt-4 text-gray-500">No movies on your watchlist.</p>
-        <a href="{{ url_for('movies.watchlist') }}" class="mt-4 inline-block bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">Go to Watchlist</a>
-      {% endif %}
-    </div>
+  <div style="margin-top: 40px; display: flex; flex-direction: column; align-items: center;">
+    <h3 style="font-size: 24px; font-weight: bold; margin-bottom: 20px;">Your Watchlist</h3>
+    {% if watchlist_movies %}
+      <ul style="width: 100%; max-width: 500px; list-style: none; padding: 0;">
+        {% for movie in watchlist_movies %}
+          <li style="margin-bottom: 12px; text-align: center;">
+            <a href="{{ url_for('movies.movie_detail', movie_id=movie.imdb_id) }}"
+               style="color: #2563EB; text-decoration: none; font-weight: 500;">
+              {{ movie.movie_title }} (Priority: {{ movie.priority }})
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+      <a href="{{ url_for('movies.watchlist') }}"
+         style="margin-top: 20px; display: inline-block; background-color: #3B82F6; color: white; padding: 10px 20px; border-radius: 6px; text-decoration: none;">
+         View Full Watchlist
+      </a>
+    {% else %}
+      <p style="margin-top: 20px; color: #6B7280;">No movies on your watchlist.</p>
+      <a href="{{ url_for('movies.watchlist') }}"
+         style="margin-top: 20px; display: inline-block; background-color: #3B82F6; color: white; padding: 10px 20px; border-radius: 6px; text-decoration: none;">
+         Go to Watchlist
+      </a>
+    {% endif %}
+  </div>
+  
   {% endif %}
 </div>
 {% endblock %}

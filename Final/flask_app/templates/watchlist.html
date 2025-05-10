@@ -1,22 +1,28 @@
 {% extends "header.html" %}
 {% block content %}
-<div class="main-container">
-  <h2 class="text-2xl font-bold">Your Watchlist</h2>
+<div style="max-width: 800px; margin: 0 auto; padding: 20px;">
+  <h2 style="font-size: 24px; font-weight: bold; margin-bottom: 20px;">Your Watchlist</h2>
+  
   {% if watchlist_movies %}
-    <ul class="mt-4">
+    <ul style="list-style: none; padding: 0;">
       {% for movie in watchlist_movies %}
-        <li class="mb-4">
-          <a href="{{ url_for('movies.movie_detail', movie_id=movie.imdb_id) }}" class="text-blue-500 hover:underline">
+        <li style="margin-bottom: 16px; padding: 10px; border: 1px solid #ccc; border-radius: 8px;">
+          <a href="{{ url_for('movies.movie_detail', movie_id=movie.imdb_id) }}"
+             style="color: #2563EB; text-decoration: none; font-weight: bold;">
             {{ movie.movie_title }}
-          </a>
-          <span>(Priority: {{ movie.priority }})</span>
-          <span class="text-gray-500"> - Added on {{ movie.date_added }}</span>
+          </a><br>
+          <span style="color: #444;">Priority: {{ movie.priority }}</span><br>
+          <span style="color: #888;">Added on {{ movie.date_added }}</span>
         </li>
       {% endfor %}
     </ul>
   {% else %}
-    <p class="mt-4 text-gray-500">No movies on your watchlist.</p>
+    <p style="margin-top: 20px; color: #888;">No movies on your watchlist.</p>
   {% endif %}
-  <a href="{{ url_for('movies.index') }}" class="mt-4 inline-block bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600">Back to Search</a>
+
+  <a href="{{ url_for('movies.index') }}"
+     style="display: inline-block; margin-top: 20px; background-color: #6B7280; color: white; padding: 10px 20px; border-radius: 6px; text-decoration: none;">
+    Back to Search
+  </a>
 </div>
 {% endblock %}
